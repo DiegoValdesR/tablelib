@@ -22,16 +22,63 @@ export const sortData = (params : ISortingParams) => {
     
     switch (typeofValue) {
         case "number":
-            sortedData = unsortedData.sort((a,b) => sortValue === "asc" ? a[target] - b[target] : b[target] - a[target]);
+            sortedData = sortNumbers({
+                data : unsortedData,
+                targetField: target,
+                sortValue: sortValue
+            });
         break;
 
         case "string":
-            sortedData = unsortedData.sort((a,b) => sortValue === "asc" ? a[target].localeCompare(b[target]) : b[target].localeCompare(a[target]));
+            sortedData = sortStrings({
+                data : unsortedData,
+                targetField: target,
+                sortValue: sortValue
+            });
         break;
                 
         default:
             break;
     };
 
+    console.log(unsortedData);
+    console.log(sortedData);
+
     return sortedData
+};
+
+const sortStrings = ({data, targetField, sortValue} : ISortingParams) => {
+    const sortedData = [...data].sort((a, b) => {
+        const aVal = a[targetField];
+        const bVal = b[targetField];
+
+        const aEmpty = !aVal || (typeof aVal === "string" && aVal.trim() === "");
+        const bEmpty = !bVal || (typeof bVal === "string" && bVal.trim() === "");
+
+        if (aEmpty && !bEmpty) return 1;
+        if (!aEmpty && bEmpty) return -1;
+        if (aEmpty && bEmpty) return 0;
+
+        return sortValue === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+    });
+
+    return sortedData;
+};
+
+const sortNumbers = ({data, targetField, sortValue} : ISortingParams) => {
+    const sortedData = data.sort((a, b) => {
+        const aVal = a[targetField];
+        const bVal = b[targetField];
+
+        const aEmpty = aVal === null || aVal === undefined || isNaN(aVal);
+        const bEmpty = bVal === null || bVal === undefined || isNaN(bVal);
+
+        if (aEmpty && !bEmpty) return 1;
+        if (!aEmpty && bEmpty) return -1;
+        if (aEmpty && bEmpty) return 0;
+
+        return sortValue === "asc" ? aVal - bVal : bVal - aVal;
+    });
+
+    return sortedData;
 };

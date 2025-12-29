@@ -19,8 +19,7 @@ export const drawBody = (params : IDrawTableBody) => {
             const td = document.createElement("td");
 
             if(column.field){
-                const keyValue = rowData[column.field];
-                if(!keyValue) throw new Error(`The key ${column.field} does not exist in the data object`);
+                const keyValue = rowData[column.field] || "";
                 td.innerText = keyValue;
             };
 
