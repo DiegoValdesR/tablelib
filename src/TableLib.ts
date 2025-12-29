@@ -3,7 +3,6 @@ import { components } from "./components/index.js";
 import { events } from "./events/index.js";
 import type { ITable } from "./interfaces/table.interface.js";
 import type { ICustomEvent } from "./interfaces/events.interface.js";
-import { drawSelectOptions } from "./components/drawHeaders.js";
 import './table.css';
 
 class TableLib{
@@ -37,7 +36,8 @@ class TableLib{
             const tableResponsive = document.createElement('div');
             tableResponsive.classList.add('tablelib-responsive');
 
-            const searchBar = this.drawTop();
+            const tableTop = this.drawTop();
+            const tableFilters = this.drawFilters();
             const tableHead = this.drawHeaders();
             const tableBody = this.drawBody();
             const tableFooter = this.drawFooter();
@@ -46,7 +46,8 @@ class TableLib{
             this.table.appendChild(tableBody);
             tableResponsive.appendChild(this.table);
 
-            this.tableContainer.appendChild(searchBar);
+            this.tableContainer.appendChild(tableTop);
+            this.tableContainer.appendChild(tableFilters);
             this.tableContainer.appendChild(tableResponsive);
             this.tableContainer.appendChild(tableFooter);
             
@@ -128,6 +129,18 @@ class TableLib{
         return datatableTop;
     };
 
+    private drawFilters(){
+        const filters = components.drawFilters({
+            tableContainer: this.tableContainer,
+            data: this.getCurrentData(),
+            columns: this.config.columns,
+            limit: this.limit,
+            offset: this.offset
+        });
+
+        return filters;
+    };
+
     /**
      * The table head section of the table
      */
@@ -135,30 +148,6 @@ class TableLib{
         let currentData = this.getCurrentData();
         let thead = this.table.querySelector('thead');
         
-        //if the head of table already exists
-        if(thead){
-            const selects = thead.querySelectorAll("th select");
-            const fields = this.config.columns.filter(column => column.field !== undefined);
-
-            selects.forEach((select, index) => {
-                const targetField = fields[index]?.field;
-                if(!targetField) return;
-
-                select.innerHTML = "";
-                const options = drawSelectOptions({
-                    limit: this.limit,
-                    offset: this.offset,
-                    data: currentData,
-                    targetField: targetField,
-                    selectedValue: this.selectedValue
-                });
-
-                options.forEach(option => select.appendChild(option));
-            });
-            
-            return thead;
-        };
-
         thead = components.drawHeaders({
             columns: this.config.columns,
             data : currentData,
@@ -166,22 +155,6 @@ class TableLib{
             limit : this.limit,
             table : this.table,
             selectedValue: this.selectedValue
-        });
-
-        //Event for the select filter
-        thead.addEventListener('change',({target}) => {
-            const option = target as HTMLOptionElement;
-            currentData = this.getCurrentData();
-
-            this.mutatedData = filterData({
-                searchValue: option.value,
-                action: "equals",
-                data: currentData
-            });
-            
-            this.selectedValue = option.value;
-            this.currentPage = 1;
-            this.drawBody();
         });
 
         //Sorting event
@@ -207,7 +180,22 @@ class TableLib{
                 else this.numberOfClicks = 1;
             });
         });
-    
+
+        //Event for the select filter
+        // thead.addEventListener('change',({target}) => {
+        //     const option = target as HTMLOptionElement;
+        //     currentData = this.getCurrentData();
+
+        //     this.mutatedData = filterData({
+        //         searchValue: option.value,
+        //         action: "equals",
+        //         data: currentData
+        //     });
+            
+        //     this.selectedValue = option.value;
+        //     this.currentPage = 1;
+        //     this.drawBody();
+        // });
         return thead;
     };
 
@@ -230,7 +218,7 @@ class TableLib{
             limit: this.limit
         });
 
-        this.drawHeaders();
+        this.drawFilters();
         this.drawFooter();
 
         return tbody;

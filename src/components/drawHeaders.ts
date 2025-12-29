@@ -32,25 +32,7 @@ export const drawHeaders = (params : IDrawTableHeader) => {
             buttonOrder.innerHTML = icons.sortDown;
             buttonOrder.dataset.target = targetField;
 
-            //Creating the select element for filter feature
-            const selectFilter = document.createElement("select");
-            selectFilter.classList.add('tablelib-select')
-            selectFilter.title = "Select an option";
-            selectFilter.name = "select-filter";
-
-            //Creating the select options for each column
-            const uniqueOptions = drawSelectOptions({
-                data: params.data,
-                offset: params.offset,
-                limit: params.limit,
-                targetField: targetField,
-                selectedValue: params.selectedValue
-            });
-
-            uniqueOptions.forEach(value => selectFilter.appendChild(value));
-
             headerContainer.appendChild(buttonOrder);
-            th.appendChild(selectFilter);
         };
         
         tr.appendChild(th);
@@ -58,36 +40,4 @@ export const drawHeaders = (params : IDrawTableHeader) => {
 
     thead.appendChild(tr);
     return thead;
-};
-
-export const drawSelectOptions = (params : ISelectOptions) => {
-    const options : HTMLOptionElement[] = [];
-    const values : string[] = [];
-
-    const defaultOption = document.createElement("option");
-    defaultOption.innerText = "Select an option";
-    defaultOption.value = "";
-    options.push(defaultOption);
-
-    for(let i = params.offset; i < params.limit; i++){
-        const object = params.data[i];
-        if(!object) continue;
-
-        const keyValue = object[params.targetField] ? object[params.targetField].toString() : undefined;
-        if(!keyValue) continue;
-
-        if(!values.some(value => value === keyValue)){
-            const option = document.createElement("option");
-            option.innerText = keyValue.toUpperCase();
-            option.value = keyValue;
-
-            if(params.selectedValue && params.selectedValue === keyValue) option.selected = true;
-            if(option.innerHTML.length > 30) option.innerHTML = option.innerHTML.slice(0, 30) + "...";
-
-            options.push(option);
-            values.push(keyValue);
-        };
-    };
-
-    return options;
 };

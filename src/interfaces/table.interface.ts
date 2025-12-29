@@ -10,6 +10,14 @@ export interface ITable {
     darkMode? : boolean
 };
 
+export interface ITableFilters{
+    tableContainer : HTMLElement
+    data : Data
+    columns : IColumn[]
+    offset : number
+    limit : number
+}
+
 export interface IDrawTableBody{
     data : Data
     columns : IColumn[]
