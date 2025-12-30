@@ -27,7 +27,7 @@ export const filterData = (params : IFilterData) => {
         
     const filteredData = params.data.filter((obj) => {
         for(const key in obj){
-            const strValue : string = obj[key].toString();
+            const strValue : string = obj[key] ? obj[key].toString() : "";
 
             if(!filterActions[params.action]) return;
 
