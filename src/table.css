@@ -2,10 +2,12 @@
 
 :root{
     --font: 'Poppins';
+    --bg:#fafafa;
+    --bg-secondary: #e6e6e6;
     --text-color: #141414;
     --icons-color : #181818;
     --header-color : #cecece;
-    --header-hover: #c4c4c4;
+    --placeholder-color : #383838;
     --border: 1px solid #a09f9f8f;
     --border-color: #a09f9f8f;
     --button-header: #8886868f;
@@ -14,10 +16,12 @@
 }
 
 .dark-mode{
+    --bg:#222222;
+    --bg-secondary: #313131;
     --text-color: #ebebeb;
-    --icons-color : #cacaca;
-    --header-color : #cecece;
-    --header-hover: #c4c4c4;
+    --icons-color : #020202;
+    --header-color : #383535;
+    --placeholder-color : #c7c7c7;
     --border: 1px solid #a09f9f8f;
     --border-color: #a09f9f8f;
     --button-header: #8886868f;
@@ -26,6 +30,7 @@
 }
 
 .tablelib-cont{
+    background-color: var(--bg);
     font-family: var(--font) !important;
     color: var(--text-color);
     padding: 10px;
@@ -40,8 +45,6 @@
 }
 
 .tablelib-responsive{
-    padding: 5px;
-    width: 100%;
     overflow-x: auto;
 }
 
@@ -49,22 +52,19 @@
     width: 100%;
     color: inherit;
     font-family: inherit;
-    border-collapse:collapse;
-    border:  1px solid var(--border);
+    border-radius: 4px;
+    border-collapse:separate;
+    border-spacing: 5px 10px;
+    border: var(--border);
     text-align: left;
+    padding: 10px;
 }
 
 .tablelib th, .tablelib td{
     font-size: 14px;
     min-width: 120px;
-    padding: 15px;
-    border-bottom: var(--border);
     color: inherit;
-}
-
-.tablelib tbody td{
-    text-wrap: nowrap;
-    min-width: 120px;
+    border-radius: 4px;
 }
 
 /*TOP OF THE TABLE*/
@@ -103,6 +103,10 @@
     font-family: inherit;
 }
 
+.tablelib-input::placeholder{
+    color: var(--placeholder-color);
+}
+
 /*CLEAR FILTERS BUTTON*/
 .tablelib-button{
     text-align: center;
@@ -110,38 +114,56 @@
     background: none;
     outline: none;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: .2s background ease;
-}
-
-.tablelib-button svg{
-    width: 30px;
 }
 
 .tablelib-button:hover{
     background-color: var(--border-color);
 }
 
+.tablelib-button svg{
+    width: 30px;
+}
+
 /*FILTERS*/
 .tablelib-filters{
     display: flex;
-    padding: 20px;
-    border-radius: 3px;
     align-items: center;
-    border: 1px solid var(--border-color);
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: var(--border);
 }
 
-.tablelib-filters .filters{
+.tablelib-filters .filters-container{
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
-.filters .filter{
+.filters-container .filter{
     display: flex;
     flex-direction: column;
+}
+
+.filter label{
+    font-size: 15px;
+}
+
+.filter select{
+    background-color: var(--select-background);
+    font-family: inherit;
+    color: inherit;
+    padding: 8px;
+    cursor: pointer;
+    border: var(--border);
+    border-radius: 3px;
+    outline: none;
 }
 
 /*HEADER*/
@@ -150,35 +172,37 @@
     font-weight: 600;
     flex-direction: row;
     cursor: pointer;
-    transition: box-shadow .1s ease-in-out;
-    &:hover{
-        box-shadow: 0px 0px 5px 1px;
-    }
+    padding: 10px;
+    border: 1px solid transparent;
+    transition: border .3s ease;
+    transition: background .3s ease;
+}
+
+.tablelib th:hover{
+    border-color: var(--border-color);
 }
 
 .tablelib-header{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
 
     > button > svg{
         width: 20px !important;
     }
 }
 
-.tablelib th .tablelib-select{
-    display: block;
-    width: 100%;
-}
-
-.tablelib th button svg{
-    width: 20px;
-}
-
 /*BODY*/
-.tablelib tbody{
-    border-bottom: var(--border-color);
+.tablelib tbody td{
+    padding: 10px;
+    margin: 10px;
+    border: var(--border);
+}
+
+.tablelib tbody tr{
+    text-wrap: nowrap;
+    min-width: 120px;
+    border: var(--border);
 }
 
 /*FOOTER*/

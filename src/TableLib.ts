@@ -135,7 +135,24 @@ class TableLib{
             data: this.getCurrentData(),
             columns: this.config.columns,
             limit: this.limit,
-            offset: this.offset
+            offset: this.offset,
+            selectedValue: this.selectedValue
+        });
+
+        //Event for the select filter
+        filters.addEventListener('change',({target}) => {
+            const option = target as HTMLOptionElement;
+            const currentData = this.getCurrentData();
+
+            this.mutatedData = filterData({
+                searchValue: option.value,
+                action: "equals",
+                data: currentData
+            });
+            
+            this.selectedValue = option.value;
+            this.currentPage = 1;
+            this.drawBody();
         });
 
         return filters;
@@ -181,21 +198,6 @@ class TableLib{
             });
         });
 
-        //Event for the select filter
-        // thead.addEventListener('change',({target}) => {
-        //     const option = target as HTMLOptionElement;
-        //     currentData = this.getCurrentData();
-
-        //     this.mutatedData = filterData({
-        //         searchValue: option.value,
-        //         action: "equals",
-        //         data: currentData
-        //     });
-            
-        //     this.selectedValue = option.value;
-        //     this.currentPage = 1;
-        //     this.drawBody();
-        // });
         return thead;
     };
 

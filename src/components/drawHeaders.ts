@@ -1,5 +1,5 @@
 import icons from "../icons.js";
-import type { IDrawTableHeader, ISelectOptions } from "./../interfaces/table.interface.js";
+import type { IDrawTableHeader } from "./../interfaces/table.interface.js";
 
 export const drawHeaders = (params : IDrawTableHeader) => {
     const thead = params.table.querySelector("thead") || document.createElement('thead');
@@ -20,9 +20,6 @@ export const drawHeaders = (params : IDrawTableHeader) => {
         const spanHeader = document.createElement("span");
         spanHeader.innerText = column.header;
 
-        headerContainer.appendChild(spanHeader);
-        th.appendChild(headerContainer);
-
         if(targetField){
             //Creating the buttons for the sorting feature
             const buttonOrder = document.createElement("button");
@@ -34,6 +31,9 @@ export const drawHeaders = (params : IDrawTableHeader) => {
 
             headerContainer.appendChild(buttonOrder);
         };
+
+        headerContainer.appendChild(spanHeader);
+        th.appendChild(headerContainer);
         
         tr.appendChild(th);
     });

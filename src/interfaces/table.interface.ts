@@ -16,6 +16,7 @@ export interface ITableFilters{
     columns : IColumn[]
     offset : number
     limit : number
+    selectedValue : string
 }
 
 export interface IDrawTableBody{
@@ -41,10 +42,8 @@ export interface IDrawTableHeader{
     selectedValue? : string
 }
 
-export interface ISelectOptions{
+export interface IFilterOptions{
     data : Data
-    offset : number
-    limit : number
     targetField : string
     selectedValue? : string
 }
