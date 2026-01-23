@@ -1,4 +1,4 @@
-import { drawPagination } from "../functions/pagination.js";
+import { drawPagination } from "../functions/Pagination.js";
 import type { IDrawTableFooter } from "./../interfaces/table.interface.js";
 
 export const drawFooter = (params : IDrawTableFooter) => {

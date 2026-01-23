@@ -1,4 +1,4 @@
-import { filterData } from "./functions/filter.js";
+import { filterData } from "./functions/Filter.js";
 import { components } from "./components/index.js";
 import { events } from "./events/index.js";
 import type { ITable } from "./interfaces/table.interface.js";
@@ -28,10 +28,10 @@ class TableLib{
     };
 
     /**
-     * Draws the table container with all of its elements
-     * @param {string} selector Optional string parameter that'll be used to select an HTML element and append the created table to it.
+     * Creates the table container with all of its elements
+     * @param selector parameter that'll be used to select an HTML element and append the created table to it.
      */
-    public createTable(selector? : string){
+    public createTable(selector : string | HTMLElement){
         try {
             const tableResponsive = document.createElement('div');
             tableResponsive.classList.add('tablelib-responsive');
@@ -82,15 +82,17 @@ class TableLib{
         };
     };
 
-    private appendToHtml(selector? : string){
-        if(selector){
+    private appendToHtml(selector : string | HTMLElement){
+        
+        if(typeof selector === "string"){
             const element = document.querySelector(selector);
             if(!element) throw new Error(`${selector} element does not exist in the document`);
             element.appendChild(this.tableContainer);
             return;
-        };
 
-        document.body.appendChild(this.tableContainer);
+        }else{
+            selector.appendChild(this.tableContainer);
+        };
     };
 
     /**

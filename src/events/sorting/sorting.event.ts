@@ -1,4 +1,4 @@
-import { sortData } from "../../functions/sort.js";
+import { sortData } from "../../functions/Sort.js";
 import icons from "../../icons.js";
 import type { ISortingEvent } from "../../interfaces/events.interface.js";
 
