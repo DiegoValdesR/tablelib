@@ -19,43 +19,57 @@ class TableLib{
     private numberOfClicks : numberOfClicks = 1;
     private selectedValue : string = "";
     
-    constructor(params : ITable){        
-        this.config = params;
+    constructor(params : ITable){
+        this.config = {
+            data: params.data,
+            columns: params.columns,
+            darkMode: params.darkMode ?? false,
+            custom: {
+                sorting: params.custom?.sorting ?? true,
+                filters: params.custom?.filters ?? true,
+                pagination: params.custom?.pagination ?? true
+            }
+        };
+
         this.tableContainer.classList.add("tablelib-cont");
         this.table.classList.add('tablelib');
 
         if(this.config.darkMode) this.tableContainer.classList.add("dark-mode");
     };
 
-    /**
-     * Creates the table container with all of its elements
-     * @param selector parameter that'll be used to select an HTML element and append the created table to it.
-     */
-    public createTable(selector : string | HTMLElement){
+    public createTable(){
         try {
             const tableResponsive = document.createElement('div');
             tableResponsive.classList.add('tablelib-responsive');
 
             const tableTop = this.drawTop();
-            const tableFilters = this.drawFilters();
             const tableHead = this.drawHeaders();
             const tableBody = this.drawBody();
-            const tableFooter = this.drawFooter();
             
             this.table.appendChild(tableHead);
             this.table.appendChild(tableBody);
             tableResponsive.appendChild(this.table);
 
             this.tableContainer.appendChild(tableTop);
-            this.tableContainer.appendChild(tableFilters);
-            this.tableContainer.appendChild(tableResponsive);
-            this.tableContainer.appendChild(tableFooter);
+
+            if(this.config.custom?.filters){
+                const tableFilters = this.drawFilters();
+                this.tableContainer.appendChild(tableFilters);
+            };
             
-            this.appendToHtml(selector);
+            this.tableContainer.appendChild(tableResponsive);
+            
+            if(this.config.custom?.pagination){
+                const tableFooter = this.drawFooter();
+                this.tableContainer.appendChild(tableFooter);
+            };
+            
 
         } catch (error : any) {
             console.error(error.message);
         };
+
+        return this.tableContainer;
     };
 
     public redrawTable(data? : Data){
@@ -79,19 +93,6 @@ class TableLib{
 
         } catch (error : any) {
             console.error(error.message);
-        };
-    };
-
-    private appendToHtml(selector : string | HTMLElement){
-        
-        if(typeof selector === "string"){
-            const element = document.querySelector(selector);
-            if(!element) throw new Error(`${selector} element does not exist in the document`);
-            element.appendChild(this.tableContainer);
-            return;
-
-        }else{
-            selector.appendChild(this.tableContainer);
         };
     };
 
@@ -167,39 +168,49 @@ class TableLib{
         let currentData = this.getCurrentData();
         let thead = this.table.querySelector('thead');
         
-        thead = components.drawHeaders({
+        const newTableHeader = components.drawHeaders({
             columns: this.config.columns,
             data : currentData,
             offset: this.offset,
             limit : this.limit,
             table : this.table,
-            selectedValue: this.selectedValue
+            selectedValue: this.selectedValue,
+            sorting: this.config.custom?.sorting ?? true
         });
+
+        if(!newTableHeader) throw new Error("The table headers couldn't be created because of data not being found");
+
+        thead = newTableHeader;
 
         //Sorting event
-        thead.querySelectorAll('th').forEach((th) => {
-            th.addEventListener('click',({target}) => {
-                if(!target) return;
+        if(this.config.custom?.sorting){
+            const headers = thead.querySelectorAll('th');
 
-                currentData = this.getCurrentData();
-            
-                const sortedData = events.sortingEvent({
-                    target : target,
-                    data: this.config.data,
-                    mutadedData: currentData,
-                    numberOfClicks : this.numberOfClicks
+            headers.forEach((th) => {
+                th.addEventListener('click',({target}) => {
+                    if(!target) return;
+
+                    currentData = this.getCurrentData();
+                
+                    const sortedData = events.sortingEvent({
+                        target : target,
+                        data: this.config.data,
+                        mutadedData: currentData,
+                        numberOfClicks : this.numberOfClicks
+                    });
+
+                    if(!sortedData) return;
+
+                    this.mutatedData = sortedData;
+                    this.drawBody();
+
+                    if(this.numberOfClicks < 3) this.numberOfClicks ++;
+                    else this.numberOfClicks = 1;
                 });
-
-                if(!sortedData) return;
-
-                this.mutatedData = sortedData;
-                this.drawBody();
-
-                if(this.numberOfClicks < 3) this.numberOfClicks ++;
-                else this.numberOfClicks = 1;
             });
-        });
 
+        };
+        
         return thead;
     };
 

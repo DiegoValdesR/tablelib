@@ -6,14 +6,19 @@ export interface IColumn{
 
 export interface ITable {
     data : Data
-    columns : IColumn[]
-    darkMode? : boolean
+    columns? : IColumn[]
+    darkMode? : boolean,
+    custom?: {
+        sorting?: boolean,
+        filters?: boolean,
+        pagination?: boolean
+    }
 };
 
 export interface ITableFilters{
     tableContainer : HTMLElement
     data : Data
-    columns : IColumn[]
+    columns? : IColumn[]
     offset : number
     limit : number
     selectedValue : string
@@ -21,7 +26,7 @@ export interface ITableFilters{
 
 export interface IDrawTableBody{
     data : Data
-    columns : IColumn[]
+    columns? : IColumn[]
     table : HTMLTableElement
     offset : number
     limit : number
@@ -34,12 +39,13 @@ export interface IDrawTableFooter{
 }
 
 export interface IDrawTableHeader{
-    columns : IColumn[]
+    columns? : IColumn[]
     data : Data
     offset : number
     limit : number
     table: HTMLTableElement
-    selectedValue? : string
+    selectedValue? : string,
+    sorting: boolean
 }
 
 export interface IFilterOptions{

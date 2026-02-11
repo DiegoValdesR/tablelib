@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "build": "tsc && vite build",
-    "start": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc"
   },
   "repository": { 
     "type": "git",

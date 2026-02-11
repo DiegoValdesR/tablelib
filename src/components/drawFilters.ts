@@ -1,3 +1,4 @@
+import { getHeaders } from "../exports/exports.js";
 import type { ITableFilters, IFilterOptions } from "../interfaces/table.interface.js";
 
 export const drawFilters = (params : ITableFilters) => {
@@ -11,7 +12,9 @@ export const drawFilters = (params : ITableFilters) => {
     const filtersContainer = document.createElement('div');
     filtersContainer.classList.add('filters-container');
 
-    params.columns.forEach(column => {
+    const headers = getHeaders(params.data, params.columns);
+
+    headers.forEach(column => {
         if(column.body || !column.field) return;
 
         const filterContainer = document.createElement('div');
